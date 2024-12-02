@@ -152,18 +152,18 @@ async def predict(request: Request):
         },
     )
 '''
-
 import streamlit as st
 import numpy as np
 import pickle
+
+# Set the page configuration
+st.set_page_config(page_title="Diabetes Prediction", layout="wide")
 
 # Load model and scaler
 with open('model.pkl', 'rb') as f:
     model = pickle.load(f)
 with open('scaler.pkl', 'rb') as f:
     scaler = pickle.load(f)
-
-st.set_page_config(page_title="Diabetes Prediction", layout="wide")
 
 st.title("Diabetes Prediction App")
 st.markdown("Provide your details below to predict the likelihood of diabetes.")
@@ -199,4 +199,5 @@ if st.button("Predict"):
         st.warning(f"Moderate Risk: {probability:.2f}%")
     else:
         st.success(f"Low Risk: {probability:.2f}%")
+
 
