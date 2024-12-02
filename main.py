@@ -154,7 +154,7 @@ async def predict(request: Request):
 '''
 
 
-'''
+
 
 
 import streamlit as st
@@ -199,6 +199,7 @@ if st.button('Predict'):
         st.write(f'Probability of Diabetes: {probability:.2f}%')
     except Exception as e:
         st.error(f"Error: {str(e)}")
+
 
 '''
 import streamlit as st
@@ -247,4 +248,4 @@ if st.button("Predict"):
     elif 50 <= probability < 75:
         st.warning(f"Moderate Risk: {probability:.2f}%")
     else:
-        st.success(f"Low Risk: {probability:.2f}%")
+        st.success(f"Low Risk: {probability:.2f}%")'''
