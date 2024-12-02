@@ -202,36 +202,49 @@ if st.button('Predict'):
 
 '''
 import streamlit as st
-import pickle
 import numpy as np
+import pickle
 
-# Page configuration
+# Set the page configuration
 st.set_page_config(page_title="Diabetes Prediction App", layout="wide")
 
-# Sidebar Navigation
-st.sidebar.title("Navigation")
-page = st.sidebar.radio(
-    "Go to", 
-    ["Main Page", "Onboarding", "Home Page", "Tracking", "Gamification", "Insights"]
-)
+# Load model and scaler
+with open('model.pkl', 'rb') as f:
+    model = pickle.load(f)
+with open('scaler.pkl', 'rb') as f:
+    scaler = pickle.load(f)
 
-# Dynamically load the page
-if page == "Main Page":
-    import pages.main_page as main_page
-    main_page.run()
-elif page == "Onboarding":
-    import pages.onboarding as onboarding
-    onboarding.run()
-elif page == "Home Page":
-    import pages.home_page as home_page
-    home_page.run()
-elif page == "Tracking":
-    import pages.tracking as tracking
-    tracking.run()
-elif page == "Gamification":
-    import pages.gamification as gamification
-    gamification.run()
-elif page == "Insights":
-    import pages.insights as insights
-    insights.run()
+st.title("Diabetes Prediction App")
+st.markdown("Provide your details below to predict the likelihood of diabetes.")
 
+# Columns for better layout
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    bmi = st.number_input("BMI", min_value=0.0, max_value=100.0, step=0.1, help="Enter your Body Mass Index")
+    age = st.number_input("Age", min_value=0, max_value=120, step=1, help="Enter your age")
+
+with col2:
+    high_bp = st.radio("High Blood Pressure", ["Yes", "No"])
+    high_chol = st.radio("High Cholesterol", ["Yes", "No"])
+    gen_hlth = st.slider("General Health (1=Poor, 5=Excellent)", 1, 5)
+
+with col3:
+    phys_hlth = st.number_input("Physical Health (days)", min_value=0, max_value=30, step=1)
+    ment_hlth = st.number_input("Mental Health (days)", min_value=0, max_value=30, step=1)
+    smoker = st.radio("Smoker", ["Yes", "No"])
+
+# Button for prediction
+if st.button("Predict"):
+    input_data = np.array([[bmi, age, high_bp == "Yes", high_chol == "Yes", gen_hlth, phys_hlth, ment_hlth, smoker == "Yes"]])
+    input_data_scaled = scaler.transform(input_data)
+    y_pred_prob = model.predict_proba(input_data_scaled)[:, 1]
+    probability = y_pred_prob[0] * 100
+
+    st.markdown("### Prediction")
+    if probability >= 75:
+        st.error(f"High Risk: {probability:.2f}%")
+    elif 50 <= probability < 75:
+        st.warning(f"Moderate Risk: {probability:.2f}%")
+    else:
+        st.success(f"Low Risk: {probability:.2f}%")
