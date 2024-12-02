@@ -152,6 +152,11 @@ async def predict(request: Request):
         },
     )
 '''
+
+
+'''
+
+
 import streamlit as st
 import numpy as np
 import pickle
@@ -195,4 +200,38 @@ if st.button('Predict'):
     except Exception as e:
         st.error(f"Error: {str(e)}")
 
+'''
+import streamlit as st
+import pickle
+import numpy as np
+
+# Page configuration
+st.set_page_config(page_title="Diabetes Prediction App", layout="wide")
+
+# Sidebar Navigation
+st.sidebar.title("Navigation")
+page = st.sidebar.radio(
+    "Go to", 
+    ["Main Page", "Onboarding", "Home Page", "Tracking", "Gamification", "Insights"]
+)
+
+# Dynamically load the page
+if page == "Main Page":
+    import pages.main_page as main_page
+    main_page.run()
+elif page == "Onboarding":
+    import pages.onboarding as onboarding
+    onboarding.run()
+elif page == "Home Page":
+    import pages.home_page as home_page
+    home_page.run()
+elif page == "Tracking":
+    import pages.tracking as tracking
+    tracking.run()
+elif page == "Gamification":
+    import pages.gamification as gamification
+    gamification.run()
+elif page == "Insights":
+    import pages.insights as insights
+    insights.run()
 
