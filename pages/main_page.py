@@ -1,5 +1,5 @@
 
- import streamlit as st
+import streamlit as st
 
 def run():
     st.title("Welcome to the Diabetes Prediction App")
